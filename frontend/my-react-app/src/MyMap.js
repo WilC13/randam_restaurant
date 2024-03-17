@@ -9,7 +9,8 @@ import {
   InfoWindow,
 } from "@vis.gl/react-google-maps";
 
-const KEY = "AIzaSyA13udlIC9FExd6WgeO4RFawDGTeZrxVHw";
+import { KEY } from "./config";
+
 const mapId = "b01e012254f22641";
 
 function MyMap({ lat, lng, zoom }) {
