@@ -1,13 +1,22 @@
 import "./App.css";
-import Btn from "./Btn";
-import MyMap from "./MyMap";
-import { useState } from "react";
+import Btn from "./HomePage/Btn";
+import MyMap from "./HomePage/MyMap";
+import { useEffect, useState } from "react";
 
 function App() {
   const [showMap, setShowMap] = useState(false);
+  const [currentLocation, setCurrentLocation] = useState(null);
+  
+  useEffect(() => {
+    if (currentLocation !== null) {
+      setShowMap(true);
+    }
+  }, [currentLocation]);
+
   return (
     <div className="App">
-      <Btn />
+      <Btn setCurrentLocation={setCurrentLocation}/>
+      <p>{JSON.stringify(currentLocation)}</p>
       <button
         onClick={() => {
           setShowMap(!showMap);

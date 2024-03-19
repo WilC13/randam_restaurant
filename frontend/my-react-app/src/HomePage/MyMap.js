@@ -1,4 +1,4 @@
-"use client";
+// "use client";
 
 import { useState } from "react";
 import {
@@ -9,7 +9,7 @@ import {
   InfoWindow,
 } from "@vis.gl/react-google-maps";
 
-import { KEY } from "./config";
+import { KEY } from "../config";
 
 const mapId = "b01e012254f22641";
 
