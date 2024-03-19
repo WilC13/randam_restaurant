@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 function App() {
   const [showMap, setShowMap] = useState(false);
   const [currentLocation, setCurrentLocation] = useState(null);
-  
+
   useEffect(() => {
     if (currentLocation !== null) {
       setShowMap(true);
@@ -15,7 +15,7 @@ function App() {
 
   return (
     <div className="App">
-      <Btn setCurrentLocation={setCurrentLocation}/>
+      <Btn setCurrentLocation={setCurrentLocation} />
       <p>{JSON.stringify(currentLocation)}</p>
       <button
         onClick={() => {

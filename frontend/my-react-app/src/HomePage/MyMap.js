@@ -9,7 +9,7 @@ import {
   InfoWindow,
 } from "@vis.gl/react-google-maps";
 
-import { KEY } from "../config";
+import { KEY } from "../global/config";
 
 const mapId = "b01e012254f22641";
 

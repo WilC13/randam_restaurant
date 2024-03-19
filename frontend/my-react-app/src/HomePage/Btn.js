@@ -1,20 +1,21 @@
-function Btn({setCurrentLocation}) {
-
-
- const getGeolocation = () => {
- 
-   if(navigator.geolocation)  {
- 
-     navigator.geolocation.getCurrentPosition((position) => {
-      setCurrentLocation({"lat": position.coords.latitude, "lng": position.coords.longitude});
-     },
-     () => {
-       console.log('Unable to retrieve your location');
-     });
-   } else {
-     console.log('Geolocation is not supproted by your broswer')
-   } 
- }
+function Btn({ setCurrentLocation }) {
+  const getGeolocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setCurrentLocation({
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          });
+        },
+        (err) => {
+          alert(err.message);
+        }
+      );
+    } else {
+      alert("Geolocation is not supproted by your broswer");
+    }
+  };
 
   return (
     <>
