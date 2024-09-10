@@ -8,10 +8,27 @@ function App() {
   const [currentLocation, setCurrentLocation] = useState(null);
 
   useEffect(() => {
-    if (currentLocation !== null) {
-      setShowMap(true);
+    if (currentLocation) {
+      postLocation(currentLocation);
     }
   }, [currentLocation]);
+
+  const postLocation = async (location) => {
+    console.log(location);
+    try {
+      const res = await fetch("http://localhost:5000/api/location", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(location),
+      });
+      const data = await res.json();
+      console.log(data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   return (
     <div className="App">
@@ -24,7 +41,7 @@ function App() {
       >
         click
       </button>
-      {showMap && <MyMap />}
+      {showMap && <MyMap lat={currentLocation.lat} lng={currentLocation.lng} />}
     </div>
   );
 }
