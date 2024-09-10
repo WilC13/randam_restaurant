@@ -4,8 +4,8 @@ function Btn({ setCurrentLocation }) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           setCurrentLocation({
-            lat: position.coords.latitude,
-            lng: position.coords.longitude,
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
           });
         },
         (err) => {

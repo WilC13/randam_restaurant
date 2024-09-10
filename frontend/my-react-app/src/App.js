@@ -41,7 +41,9 @@ function App() {
       >
         click
       </button>
-      {showMap && <MyMap lat={currentLocation.lat} lng={currentLocation.lng} />}
+      {showMap && (
+        <MyMap latitude={currentLocation.lat} longitude={currentLocation.lng} />
+      )}
     </div>
   );
 }
