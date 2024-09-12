@@ -1,4 +1,4 @@
-function Btn({ setCurrentLocation }) {
+function RandomBtn({ setCurrentLocation }) {
   const getGeolocation = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -24,4 +24,4 @@ function Btn({ setCurrentLocation }) {
   );
 }
 
-export default Btn;
+export default RandomBtn;

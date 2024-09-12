@@ -1,6 +1,7 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_file
 from flask_cors import CORS
 import requests, json, random
+from io import BytesIO
 
 import time
 
@@ -81,11 +82,11 @@ class NearbySearch:
         self,
         latitude,
         longitude,
-        radius=1000,
+        radius=1500,
         lang="zh-HK",
         maxprice=None,
-        place_type="restaurant",
-        limit=10,
+        place_type="food",
+        limit=20,
     ) -> list:
         results = self.find_nearby_places(
             latitude, longitude, radius, lang, maxprice, place_type
@@ -124,6 +125,20 @@ def receive_location():
         jsonify({"status": "success", "message": "Location received", "result": res}),
         200,
     )
+
+@app.route("/api/photo", methods=["GET"])
+def get_photo():
+    photo_reference = request.args.get('photo_reference')
+    if not photo_reference:
+        return jsonify({"error": "Missing photo_reference parameter"}), 400
+
+    photo_url = f"https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference={photo_reference}&key={MAP_API_KEY}"
+    response = requests.get(photo_url)
+
+    if response.status_code == 200:
+        return send_file(BytesIO(response.content), mimetype='image/jpeg')
+    else:
+        return jsonify({"error": "Failed to fetch photo"}), response.status_code
 
 
 if __name__ == "__main__":

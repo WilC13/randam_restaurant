@@ -1,20 +1,27 @@
 import "./App.css";
-import Btn from "./HomePage/Btn";
-import Loading from "./HomePage/Loading";
-// import MyMap from "./HomePage/MyMap";
+import RandomBtn from "./Component/RandomBtn";
+import MapBtn from "./Component/MapBtn";
+import Loading from "./Component/Loading";
+import Info from "./Component/Info";
+
+// import MyMap from "./Component/MyMap";
 import { useEffect, useState } from "react";
 
 function App() {
   // const [showMap, setShowMap] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [currentLocation, setCurrentLocation] = useState(null);
-  
+  const [restaurantInfo, setRestaurantInfo] = useState({});
 
   useEffect(() => {
     if (currentLocation) {
       postLocation(currentLocation);
     }
   }, [currentLocation]);
+
+  useEffect(() => {
+    console.log(restaurantInfo);
+  }, [restaurantInfo]);
 
   const postLocation = async (location) => {
     console.log(location);
@@ -28,18 +35,12 @@ function App() {
         body: JSON.stringify(location),
       });
       const data = await res.json();
-      console.log(data);
-      const dir_url = "https://www.google.com/maps/dir/?api=1"
-      const params = new URLSearchParams({
-        latitude: location.lat,
-        longitude: location.lng,
-        destination: data.result.name,
-        destination_place_id: data.result.place_id,
-        travelmode: "walking", 
-      }).toString();
-      console.log(`${dir_url}&${params}`);
+      setRestaurantInfo(data.result);
+      
+      
+      // console.log(`${dir_url}&${params}`);
       // window.location.href = `${dir_url}&${params}`;
-      window.open(`${dir_url}&${params}`);
+      // window.open(`${dir_url}&${params}`);
     } catch (err) {
       console.error(err);
     }finally{
@@ -52,8 +53,10 @@ function App() {
       {isLoading ? (<Loading /> ):
         (
         <>
-          <Btn setCurrentLocation={setCurrentLocation} />
-          <p>{JSON.stringify(currentLocation)}</p>
+          {/* <p>{JSON.stringify(currentLocation)}</p> */}
+          <Info info={restaurantInfo} />
+          <RandomBtn setCurrentLocation={setCurrentLocation} />
+          <MapBtn location={currentLocation} data={restaurantInfo} />
         </>)
             }      {/* <button
         onClick={() => {
