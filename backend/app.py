@@ -3,9 +3,10 @@ from flask_cors import CORS
 import requests, json, random
 from io import BytesIO
 
-import time, math
+import time, math, os
 
-from KEY import *
+# from KEY import *
+MAP_API_KEY = os.environ.get("MAP_API_KEY")
 
 app = Flask(__name__)
 # CORS(app, resources={r"/api/*": {"origins": "http://localhost:3000"}})
