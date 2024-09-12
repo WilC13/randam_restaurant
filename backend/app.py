@@ -5,8 +5,9 @@ from io import BytesIO
 
 import time, math, os
 
-# from KEY import *
-MAP_API_KEY = os.environ.get("MAP_API_KEY")
+from KEY import *
+
+# MAP_API_KEY = os.environ.get("MAP_API_KEY")
 
 app = Flask(__name__)
 # CORS(app, resources={r"/api/*": {"origins": "http://localhost:3000"}})
@@ -204,10 +205,10 @@ def receive_location():
     #         indent=4,
     #     )
 
-    # return (
-    #     jsonify({"status": "success", "message": "Location received", "result": res}),
-    #     200,
-    # )
+    return (
+        jsonify({"status": "success", "message": "Location received", "result": res}),
+        200,
+    )
 
 
 @app.route("/api/photo", methods=["GET"])
