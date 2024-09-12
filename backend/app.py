@@ -2,6 +2,8 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 import requests, json, random
 
+import time
+
 from KEY import *
 
 app = Flask(__name__)
@@ -62,6 +64,10 @@ class NearbySearch:
         response = requests.get(self.NEARBY_SEARCH_URL, params=params)
         if response.status_code == 200:
             res = response.json()
+            print(res)
+            if res.get('status') == "INVALID_REQUEST":
+                time.sleep(1)
+                return []
             if res.get("next_page_token"):
                 self.next_page_token = res.get("next_page_token")
             else:
@@ -75,18 +81,19 @@ class NearbySearch:
         self,
         latitude,
         longitude,
-        radius=2000,
+        radius=1000,
         lang="zh-HK",
         maxprice=None,
         place_type="restaurant",
-        limit=5,
+        limit=10,
     ) -> list:
         results = self.find_nearby_places(
             latitude, longitude, radius, lang, maxprice, place_type
         )
         counter = 0
         while self.next_page_token and counter < limit:
-            results += self.get_next_page()
+            res = self.get_next_page()
+            results.extend(res)
             counter += 1
         return results
 
@@ -100,12 +107,14 @@ def receive_location():
     print(f"Received location: Latitude={latitude}, Longitude={longitude}")
 
     temp = NearbySearch(MAP_API_KEY)
-    res = random.choice(temp.get_all_results(latitude, longitude))
+    l = temp.get_all_results(latitude, longitude)
+    print(len(l))
+    res = random.choice(l)
 
     # for testing
     with open("places.json", "w", encoding="utf-8") as json_file:
         json.dump(
-            temp.get_all_results(latitude, longitude),
+            l,
             json_file,
             ensure_ascii=False,
             indent=4,
