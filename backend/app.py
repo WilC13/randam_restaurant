@@ -8,7 +8,7 @@ import time
 from KEY import *
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, resources={r"/api/*": {"origins": "http://localhost:3000"}})
 
 
 class NearbySearch:
@@ -39,7 +39,7 @@ class NearbySearch:
             "opennow": True,
             "type": place_type,
             "key": self.api_key,
-            'rankby': 'distance'
+            "rankby": "distance",
         }
 
         response = requests.get(self.NEARBY_SEARCH_URL, params=params)
@@ -70,7 +70,7 @@ class NearbySearch:
         if response.status_code == 200:
             res = response.json()
             print(res)
-            if res.get('status') == "INVALID_REQUEST":
+            if res.get("status") == "INVALID_REQUEST":
                 time.sleep(1)
                 return []
             if res.get("next_page_token"):
@@ -133,9 +133,10 @@ def receive_location():
         200,
     )
 
+
 @app.route("/api/photo", methods=["GET"])
 def get_photo():
-    photo_reference = request.args.get('photo_reference')
+    photo_reference = request.args.get("photo_reference")
     if not photo_reference:
         return jsonify({"error": "Missing photo_reference parameter"}), 400
 
@@ -143,7 +144,7 @@ def get_photo():
     response = requests.get(photo_url)
 
     if response.status_code == 200:
-        return send_file(BytesIO(response.content), mimetype='image/jpeg')
+        return send_file(BytesIO(response.content), mimetype="image/jpeg")
     else:
         return jsonify({"error": "Failed to fetch photo"}), response.status_code
 
