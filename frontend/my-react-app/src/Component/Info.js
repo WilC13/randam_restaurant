@@ -1,10 +1,8 @@
-import React from 'react';
-const price = {"0": "超平",
-    "1": "平",
-    "2": "中等",
-    "3":"貴",
-    "4": "超貴"
-   }
+import React from "react";
+const price = { 0: "超平", 1: "平", 2: "中等", 3: "貴", 4: "超貴" };
+const local = "http://localhost:5000/api/photo?photo_reference=";
+const render =
+  "https://randam-restaurant.onrender.com/api/photo?photo_reference=";
 function Info({ info }) {
   if (!info || Object.keys(info).length === 0) {
     return <></>;
@@ -14,12 +12,12 @@ function Info({ info }) {
     <div>
       <h2>{info.name}</h2>
       <p>Address: {info.vicinity}</p>
-      <img 
-            src={`http://localhost:5000/api/photo?photo_reference=${info.photos[0].photo_reference}`}
-            alt={info.name} 
-            // style={{ maxWidth: '100%', maxHeight: '100vh', objectFit: 'contain' }} 
-            style={{ maxWidth: '33vm', maxHeight: '33vh', objectFit: 'contain' }} 
-          />
+      <img
+        src={`${render}${info.photos[0].photo_reference}`}
+        alt={info.name}
+        // style={{ maxWidth: '100%', maxHeight: '100vh', objectFit: 'contain' }}
+        style={{ maxWidth: "33vm", maxHeight: "33vh", objectFit: "contain" }}
+      />
       <p>Rating: {info.rating}</p>
       <p>Price Level: {price[info.price_level]}</p>
     </div>
@@ -27,5 +25,3 @@ function Info({ info }) {
 }
 
 export default Info;
-
-

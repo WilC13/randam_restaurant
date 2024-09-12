@@ -26,7 +26,7 @@ function App() {
     console.log(location);
     setIsLoading(true);
     const local = "http://localhost:5000/api/location";
-    const render = "https://randam-restaurant.onrender.com";
+    const render = "https://randam-restaurant.onrender.com/api/location";
     try {
       const res = await fetch(render, {
         method: "POST",
