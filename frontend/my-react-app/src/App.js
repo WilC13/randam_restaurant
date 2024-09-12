@@ -25,8 +25,10 @@ function App() {
   const postLocation = async (location) => {
     console.log(location);
     setIsLoading(true);
+    const local = "http://localhost:5000/api/location";
+    const render = "https://randam-restaurant.onrender.com";
     try {
-      const res = await fetch("http://localhost:5000/api/location", {
+      const res = await fetch(render, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

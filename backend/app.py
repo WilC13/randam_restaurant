@@ -10,8 +10,8 @@ from KEY import *
 # MAP_API_KEY = os.environ.get("MAP_API_KEY")
 
 app = Flask(__name__)
-# CORS(app, resources={r"/api/*": {"origins": "http://localhost:3000"}})
-CORS(app)
+CORS(app, resources={r"/api/*": {"origins": "http://localhost:3000"}})
+# CORS(app)
 
 
 class NearbySearch:
