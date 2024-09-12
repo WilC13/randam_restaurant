@@ -32,12 +32,14 @@ class NearbySearch:
     ) -> list:
         params = {
             "location": f"{latitude},{longitude}",
-            "radius": radius,
+            # "radius": radius,
             "language": lang,
             "maxprice": maxprice,
+            "keyword": place_type,
             "opennow": True,
             "type": place_type,
             "key": self.api_key,
+            'rankby': 'distance'
         }
 
         response = requests.get(self.NEARBY_SEARCH_URL, params=params)
@@ -48,6 +50,8 @@ class NearbySearch:
                 self.next_page_token = res.get("next_page_token")
             else:
                 self.next_page_token = None
+            for _ in res["results"]:
+                print(_["name"])
             return res["results"]
         else:
             print(f"Error: {response.status_code}")
@@ -73,6 +77,9 @@ class NearbySearch:
                 self.next_page_token = res.get("next_page_token")
             else:
                 self.next_page_token = None
+            print(res["results"][0].get("name"))
+            for _ in res["results"]:
+                print(_["name"])
             return res["results"]
         else:
             print(f"Error: {response.status_code}")
@@ -108,7 +115,7 @@ def receive_location():
     print(f"Received location: Latitude={latitude}, Longitude={longitude}")
 
     temp = NearbySearch(MAP_API_KEY)
-    l = temp.get_all_results(latitude, longitude)
+    l = temp.get_all_results(latitude, longitude, maxprice=3)
     print(len(l))
     res = random.choice(l)
 
