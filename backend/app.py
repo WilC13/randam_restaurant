@@ -57,10 +57,11 @@ class NearbySearch:
             "maxprice": maxprice,
             "keyword": place_type,
             "opennow": True,
-            "type": place_type,
+            # "type": place_type,
             "key": self.api_key,
             "rankby": "distance",
         }
+        print(params)
 
         return self._search_place(params)
 
@@ -72,16 +73,17 @@ class NearbySearch:
         maxprice: int = None,
         place_type="restaurant",
     ) -> list:
+
         params = {
             "location": f"{latitude},{longitude}",
-            "radius": self.RADIUS,
+            "radius": str(self.RADIUS),
             "language": lang,
             "maxprice": maxprice,
-            "keyword": place_type,
             "opennow": True,
-            "type": place_type,
+            "keyword": place_type,
             "key": self.api_key,
         }
+        print(params)
 
         return self._search_place(params)
 
@@ -105,7 +107,7 @@ class NearbySearch:
                 self.next_page_token = res.get("next_page_token")
             else:
                 self.next_page_token = None
-            print(res["results"][0].get("name"))
+            # print(res["results"][0].get("name"))
             for _ in res["results"]:
                 print(_["name"])
             return res["results"]
@@ -230,3 +232,7 @@ def get_photo():
 
 if __name__ == "__main__":
     app.run(debug=True)
+    # temp = NearbySearch(MAP_API_KEY)
+    # raw_list = temp.get_all_results(22.2780997, 114.1823117)
+    # print(raw_list)
+
