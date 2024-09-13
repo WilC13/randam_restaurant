@@ -222,6 +222,7 @@ def receive_location():
     longitude = data.get("longitude")
     # Process the location data as needed
     print(f"Received location: Latitude={latitude}, Longitude={longitude}")
+    print(temp_results)
 
     places_result = NearbySearch(MAP_API_KEY)
     raw_list = places_result.get_all_results(latitude, longitude, maxprice=3)
