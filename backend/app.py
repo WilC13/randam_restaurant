@@ -27,8 +27,10 @@ class NearbySearch:
 
     def _search_place(self, params: dict) -> list:
         response = requests.get(self.NEARBY_SEARCH_URL, params=params)
+        print(response.url)
         if response.status_code == 200:
             res = response.json()
+            print(res)
             print(res.get("next_page_token"))
             if res.get("next_page_token"):
                 self.next_page_token = res.get("next_page_token")
