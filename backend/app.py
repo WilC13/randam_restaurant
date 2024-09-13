@@ -3,15 +3,27 @@ from flask_cors import CORS
 import requests, json, random
 from io import BytesIO
 
-import time, math, os
+import time, math, os, re
 
 # from KEY import *
 
 MAP_API_KEY = os.environ.get("MAP_API_KEY")
 
 app = Flask(__name__)
-CORS(app, resources={r"/api/*": {"origins": ["http://localhost:3000", "https://randam-restaurant-website.onrender.com"]}})
+CORS(
+    app,
+    resources={
+        r"/api/*": {
+            "origins": [
+                "http://localhost:3000",
+                "https://randam-restaurant-website.onrender.com",
+            ]
+        }
+    },
+)
 # CORS(app)
+
+temp_results = dict()
 
 
 class NearbySearch:
@@ -26,6 +38,24 @@ class NearbySearch:
         )
 
     def _search_place(self, params: dict) -> list:
+        pattern = r"([-+]?\d*\.\d+),([-+]?\d*\.\d+)"
+        new_match = re.match(pattern, params.get("location"))
+        new_latitude = float(new_match.group(1))
+        new_longitude = float(new_match.group(2))
+
+        for k, v in temp_results.items():
+            exist_match = re.match(pattern, k)
+            exist_latitude = float(exist_match.group(1))
+            exist_longitude = float(exist_match.group(2))
+            if (
+                self.haversine(
+                    new_latitude, new_longitude, exist_latitude, exist_longitude
+                )
+                < 200
+            ):
+                return v
+
+        print("new search")
         response = requests.get(self.NEARBY_SEARCH_URL, params=params)
         # print(response.url)
         if response.status_code == 200:
@@ -38,6 +68,7 @@ class NearbySearch:
                 self.next_page_token = None
             # for _ in res["results"]:
             #     print(_["name"])
+            temp_results[params.get("location")] = res["results"]
             return res["results"]
         else:
             print(f"Error: {response.status_code}")
@@ -232,3 +263,101 @@ if __name__ == "__main__":
     # raw_list = temp.get_all_results(22.2780997, 114.1823117)
     # print(raw_list)
 
+
+"""new api"""
+# def receive_location():
+#     latitude = 22.2780997
+#     longitude = 114.1823117
+
+#     if not latitude or not longitude:
+#         return jsonify({"error": "Missing latitude or longitude"}), 400
+
+#     headers = {
+#         "Content-Type": "application/json",
+#         "X-Goog-Api-Key": MAP_API_KEY,
+#         "X-Goog-FieldMask": "places.displayName,places.formattedAddress,places.photos,places.priceLevel,places.rating",
+#     }
+
+#     payload = {
+#         "includedTypes": [
+#             "restaurant",
+#             "american_restaurant",
+#             "bakery",
+#             "bar",
+#             "barbecue_restaurant",
+#             "brazilian_restaurant",
+#             "breakfast_restaurant",
+#             "brunch_restaurant",
+#             "cafe",
+#             "chinese_restaurant",
+#             "coffee_shop",
+#             "fast_food_restaurant",
+#             "french_restaurant",
+#             "greek_restaurant",
+#             "hamburger_restaurant",
+#             "ice_cream_shop",
+#             "indian_restaurant",
+#             "indonesian_restaurant",
+#             "italian_restaurant",
+#             "japanese_restaurant",
+#             "korean_restaurant",
+#             "lebanese_restaurant",
+#             "meal_delivery",
+#             "meal_takeaway",
+#             "mediterranean_restaurant",
+#             "mexican_restaurant",
+#             "middle_eastern_restaurant",
+#             "pizza_restaurant",
+#             "ramen_restaurant",
+#             "restaurant",
+#             "sandwich_shop",
+#             "seafood_restaurant",
+#             "spanish_restaurant",
+#             "steak_house",
+#             "sushi_restaurant",
+#             "thai_restaurant",
+#             "turkish_restaurant",
+#             "vegan_restaurant",
+#             "vegetarian_restaurant",
+#             "vietnamese_restaurant",
+#         ],
+#         "locationRestriction": {
+#             "circle": {
+#                 "center": {"latitude": latitude, "longitude": longitude},
+#                 "radius": 2000.0,
+#             }
+#         },
+#         "languageCode": "zh-HK",
+#         "rankPreference": "DISTANCE",
+#     }
+
+#     response = requests.post(
+#         "https://places.googleapis.com/v1/places:searchNearby",
+#         headers=headers,
+#         json=payload,
+#     )
+
+#     if response.status_code == 200:
+#         with open("places.json", "w", encoding="utf-8") as json_file:
+#             json.dump(
+#                 response.json(),
+#                 json_file,
+#                 ensure_ascii=False,
+#                 indent=4,
+#             )
+#     else:
+#         print("err", response.json())
+
+
+# name = "places/ChIJMzGJ2VAABDQRyXkWsL9iK10/photos/AXCi2Q74TzJf9sb4oTMkwrREoPBQNYrOxqIXoRYIHxwTZuX53IHNRMPYcyxUU9PN2A0p3ChyYPrDhEM0SJhydSaBKwXrgNTWMXeKpuI2lPqE1rK4ncorrUFWO6cOHHw3l-nYcA0bJ-JI8zetHnHgQphaK_tXqvqitgWgT8Qx"
+# url = f"https://places.googleapis.com/v1/{name}/media"
+
+
+# params = {"key": MAP_API_KEY, "maxWidthPx": 4800, "skipHttpRedirect": True}
+# res = requests.get(
+#     url,
+#     params=params,
+
+# )
+
+# print(res.json())
