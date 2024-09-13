@@ -27,17 +27,17 @@ class NearbySearch:
 
     def _search_place(self, params: dict) -> list:
         response = requests.get(self.NEARBY_SEARCH_URL, params=params)
-        print(response.url)
+        # print(response.url)
         if response.status_code == 200:
             res = response.json()
-            print(res)
-            print(res.get("next_page_token"))
+            # print(res)
+            # print(res.get("next_page_token"))
             if res.get("next_page_token"):
                 self.next_page_token = res.get("next_page_token")
             else:
                 self.next_page_token = None
-            for _ in res["results"]:
-                print(_["name"])
+            # for _ in res["results"]:
+            #     print(_["name"])
             return res["results"]
         else:
             print(f"Error: {response.status_code}")
@@ -61,7 +61,6 @@ class NearbySearch:
             "key": self.api_key,
             "rankby": "distance",
         }
-        print(params)
 
         return self._search_place(params)
 
@@ -83,7 +82,6 @@ class NearbySearch:
             "keyword": place_type,
             "key": self.api_key,
         }
-        print(params)
 
         return self._search_place(params)
 
@@ -99,7 +97,7 @@ class NearbySearch:
         response = requests.get(self.NEARBY_SEARCH_URL, params=params)
         if response.status_code == 200:
             res = response.json()
-            print(res)
+            # print(res)
             if res.get("status") == "INVALID_REQUEST":
                 time.sleep(1)
                 return []
@@ -108,8 +106,8 @@ class NearbySearch:
             else:
                 self.next_page_token = None
             # print(res["results"][0].get("name"))
-            for _ in res["results"]:
-                print(_["name"])
+            # for _ in res["results"]:
+            #     print(_["name"])
             return res["results"]
         else:
             print(f"Error: {response.status_code}")
@@ -196,9 +194,7 @@ def receive_location():
 
     places_result = NearbySearch(MAP_API_KEY)
     raw_list = places_result.get_all_results(latitude, longitude, maxprice=3)
-    l = places_result.filter_results(raw_list, latitude, longitude)
-    print(len(l))
-    res = random.choice(l)
+    res = random.choice(places_result.filter_results(raw_list, latitude, longitude))
 
     # for testing
     # with open("places.json", "w", encoding="utf-8") as json_file:
