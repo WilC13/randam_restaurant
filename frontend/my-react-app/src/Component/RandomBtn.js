@@ -38,8 +38,10 @@
 
 // export default RandomBtn;
 
-function RandomBtn({ setCurrentLocation }) {
+function RandomBtn({ setCurrentLocation , setIsLoading}) {
   const getGeolocation = () => {
+    setIsLoading(true);
+
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {

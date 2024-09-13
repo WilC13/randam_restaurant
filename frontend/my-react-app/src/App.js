@@ -53,7 +53,7 @@ function App() {
           {/* debug */}
           <p>{JSON.stringify(currentLocation)}</p>
           <Info info={restaurantInfo} />
-          <RandomBtn setCurrentLocation={setCurrentLocation} />
+          <RandomBtn setCurrentLocation={setCurrentLocation} setIsLoading={setIsLoading}/>
           <MapBtn location={currentLocation} data={restaurantInfo} />
         </>
       )}
