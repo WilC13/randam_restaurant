@@ -258,6 +258,11 @@ def get_photo():
         return jsonify({"error": "Failed to fetch photo"}), response.status_code
 
 
+@app.route("/ads.txt")
+def ads():
+    return send_file("ads.txt")
+
+
 if __name__ == "__main__":
     app.run(debug=True)
     # temp = NearbySearch(MAP_API_KEY)
