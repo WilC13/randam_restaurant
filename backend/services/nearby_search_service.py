@@ -140,7 +140,7 @@ class NearbySearch:
         def _next_page():
             nonlocal counter
             while self.next_page_token and counter < limit:
-                print(counter)
+                # print(counter)
                 time.sleep(1) if counter == 0 else None
                 res = self.get_next_page()
                 results.extend(res)

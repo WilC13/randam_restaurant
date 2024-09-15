@@ -65,7 +65,8 @@ def get_photo():
 
     if response.status_code == 200:
         # Store result in firebase photo_cache
-        save_photo_to_firebase(place_id, response.content)
+        if not save_photo_to_firebase(place_id, response.content):
+            print(f"Failed to save photo {place_id} to Firebase")
         return send_file(BytesIO(response.content), mimetype="image/jpeg")
     else:
         return jsonify({"error": "Failed to fetch photo"}), response.status_code

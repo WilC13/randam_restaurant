@@ -25,6 +25,9 @@ def get_photo_from_firebase(place_id):
 
 
 def save_photo_to_firebase(place_id, photo_data):
+    if place_id is None or photo_data is None:
+        return
+
     db.collection("photos").document(place_id).set(
         {
             "place_id": place_id,

@@ -1,10 +1,11 @@
-import "./App.css";
-import RandomBtn from "./Component/RandomBtn";
-import MapBtn from "./Component/MapBtn";
-import Loading from "./Component/Loading";
-import Info from "./Component/Info";
-
 import { useEffect, useState } from "react";
+
+import RandomBtn from "./components/RandomBtn";
+import MapBtn from "./components/MapBtn";
+import Loading from "./components/Loading";
+import Info from "./components/Info";
+
+import { postLocation } from "./services/locationService";
 
 function App() {
   const [isLoading, setIsLoading] = useState(false);
@@ -13,7 +14,7 @@ function App() {
 
   useEffect(() => {
     if (currentLocation) {
-      postLocation(currentLocation);
+      postLocation(currentLocation, setIsLoading, setRestaurantInfo);
     }
   }, [currentLocation]);
 
@@ -21,28 +22,6 @@ function App() {
   useEffect(() => {
     console.log(restaurantInfo);
   }, [restaurantInfo]);
-
-  const postLocation = async (location) => {
-    console.log(location);
-    setIsLoading(true);
-    const local = "http://localhost:5000/api/location";
-    const render = "https://randam-restaurant.onrender.com/api/location";
-    try {
-      const res = await fetch(render, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(location),
-      });
-      const data = await res.json();
-      setRestaurantInfo(data.result);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   return (
     <div className="App">
@@ -53,7 +32,10 @@ function App() {
           {/* debug */}
           <p>{JSON.stringify(currentLocation)}</p>
           <Info info={restaurantInfo} />
-          <RandomBtn setCurrentLocation={setCurrentLocation} setIsLoading={setIsLoading}/>
+          <RandomBtn
+            setCurrentLocation={setCurrentLocation}
+            setIsLoading={setIsLoading}
+          />
           <MapBtn location={currentLocation} data={restaurantInfo} />
         </>
       )}
