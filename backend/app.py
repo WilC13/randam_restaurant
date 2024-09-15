@@ -1,13 +1,16 @@
-from flask import Flask, request, jsonify, send_file
-from flask_cors import CORS
-import requests, json, random
+import time, math, os, re, requests, json, random
 from io import BytesIO
 
-import time, math, os, re
+from dotenv import load_dotenv
+from flask import Flask, request, jsonify, send_file
+from flask_cors import CORS
 
-# from KEY import *
+from config import config
+from services.nearby_search_service import NearbySearch
+from services.firebase_service import get_photo_from_firebase, save_photo_to_firebase
 
-MAP_API_KEY = os.environ.get("MAP_API_KEY")
+
+load_dotenv()
 
 app = Flask(__name__)
 CORS(
@@ -23,197 +26,6 @@ CORS(
 )
 # CORS(app)
 
-temp_results = dict()
-
-
-class NearbySearch:
-    """https://developers.google.com/maps/documentation/places/web-service/search-nearby?hl=zh-tw#pagetoken"""
-
-    def __init__(self, api_key, radius=2000):
-        self.api_key = api_key
-        self.next_page_token = None
-        self.RADIUS = radius
-        self.NEARBY_SEARCH_URL = (
-            "https://maps.googleapis.com/maps/api/place/nearbysearch/json"
-        )
-
-    def _search_place(self, params: dict) -> list:
-        pattern = r"([-+]?\d*\.\d+),([-+]?\d*\.\d+)"
-        new_match = re.match(pattern, params.get("location"))
-        new_latitude = float(new_match.group(1))
-        new_longitude = float(new_match.group(2))
-
-        for k, v in temp_results.items():
-            exist_match = re.match(pattern, k)
-            exist_latitude = float(exist_match.group(1))
-            exist_longitude = float(exist_match.group(2))
-            if (
-                self.haversine(
-                    new_latitude, new_longitude, exist_latitude, exist_longitude
-                )
-                < 200
-            ):
-                return v
-
-        print("new search")
-        response = requests.get(self.NEARBY_SEARCH_URL, params=params)
-        # print(response.url)
-        if response.status_code == 200:
-            res = response.json()
-            # print(res)
-            # print(res.get("next_page_token"))
-            if res.get("next_page_token"):
-                self.next_page_token = res.get("next_page_token")
-            else:
-                self.next_page_token = None
-            # for _ in res["results"]:
-            #     print(_["name"])
-            temp_results[params.get("location")] = res["results"]
-            return res["results"]
-        else:
-            print(f"Error: {response.status_code}")
-            return []
-
-    def find_by_distance(
-        self,
-        latitude: float,
-        longitude: float,
-        lang="zh-HK",
-        maxprice: int = None,
-        place_type="restaurant",
-    ) -> list:
-        params = {
-            "location": f"{latitude},{longitude}",
-            "language": lang,
-            "maxprice": maxprice,
-            "keyword": place_type,
-            "opennow": True,
-            # "type": place_type,
-            "key": self.api_key,
-            "rankby": "distance",
-        }
-
-        return self._search_place(params)
-
-    def find_by_radius(
-        self,
-        latitude: float,
-        longitude: float,
-        lang="zh-HK",
-        maxprice: int = None,
-        place_type="restaurant",
-    ) -> list:
-
-        params = {
-            "location": f"{latitude},{longitude}",
-            "radius": str(self.RADIUS),
-            "language": lang,
-            "maxprice": maxprice,
-            "opennow": True,
-            "keyword": place_type,
-            "key": self.api_key,
-        }
-
-        return self._search_place(params)
-
-    def get_next_page(self) -> list:
-        if not self.next_page_token:
-            return []
-
-        params = {
-            "pagetoken": self.next_page_token,
-            "key": self.api_key,
-        }
-
-        response = requests.get(self.NEARBY_SEARCH_URL, params=params)
-        if response.status_code == 200:
-            res = response.json()
-            # print(res)
-            if res.get("status") == "INVALID_REQUEST":
-                time.sleep(1)
-                return []
-            if res.get("next_page_token"):
-                self.next_page_token = res.get("next_page_token")
-            else:
-                self.next_page_token = None
-            # print(res["results"][0].get("name"))
-            # for _ in res["results"]:
-            #     print(_["name"])
-            return res["results"]
-        else:
-            print(f"Error: {response.status_code}")
-            return []
-
-    def get_all_results(
-        self,
-        latitude,
-        longitude,
-        lang="zh-HK",
-        maxprice=None,
-        place_type="food",
-        limit=20,
-    ) -> list:
-        def _next_page():
-            nonlocal counter
-            while self.next_page_token and counter < limit:
-                res = self.get_next_page()
-                results.extend(res)
-                counter += 1
-
-        counter = 0
-        results = self.find_by_distance(latitude, longitude, lang, maxprice, place_type)
-
-        _next_page()
-
-        if len(results) < 60:  # 20 * 3
-            results.extend(
-                self.find_by_radius(latitude, longitude, lang, maxprice, place_type)
-            )
-
-        _next_page()
-
-        return results
-
-    def filter_results(
-        self, results: list[dict], latitude: float, longitude: float
-    ) -> list:
-        filtered_results = []
-        for result in results:
-            lat = result["geometry"]["location"]["lat"]
-            lng = result["geometry"]["location"]["lng"]
-            distance = self.haversine(latitude, longitude, lat, lng)
-            if distance <= self.RADIUS:
-                filtered_results.append(result)
-        return filtered_results
-
-    @staticmethod
-    def haversine(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
-        """return distance in meters"""
-        # 地球半徑，單位為公里
-        R = 6371.0
-        R_m = R * 1000
-
-        # 將經緯度轉換為弧度
-        lat1_rad = math.radians(lat1)
-        lon1_rad = math.radians(lon1)
-        lat2_rad = math.radians(lat2)
-        lon2_rad = math.radians(lon2)
-
-        # 計算差值
-        delta_lat = lat2_rad - lat1_rad
-        delta_lon = lon2_rad - lon1_rad
-
-        # 應用哈弗辛公式
-        a = (
-            math.sin(delta_lat / 2) ** 2
-            + math.cos(lat1_rad) * math.cos(lat2_rad) * math.sin(delta_lon / 2) ** 2
-        )
-        c = 2 * math.asin(math.sqrt(a))
-
-        # 最終距離
-        distance = R_m * c
-        return distance
-
 
 @app.route("/api/location", methods=["POST"])
 def receive_location():
@@ -222,20 +34,10 @@ def receive_location():
     longitude = data.get("longitude")
     # Process the location data as needed
     print(f"Received location: Latitude={latitude}, Longitude={longitude}")
-    print(temp_results)
 
-    places_result = NearbySearch(MAP_API_KEY)
+    places_result = NearbySearch()
     raw_list = places_result.get_all_results(latitude, longitude, maxprice=3)
     res = random.choice(places_result.filter_results(raw_list, latitude, longitude))
-
-    # for testing
-    # with open("places.json", "w", encoding="utf-8") as json_file:
-    #     json.dump(
-    #         l,
-    #         json_file,
-    #         ensure_ascii=False,
-    #         indent=4,
-    #     )
 
     return (
         jsonify({"status": "success", "message": "Location received", "result": res}),
@@ -246,13 +48,24 @@ def receive_location():
 @app.route("/api/photo", methods=["GET"])
 def get_photo():
     photo_reference = request.args.get("photo_reference")
+    place_id = request.args.get("place_id")
     if not photo_reference:
         return jsonify({"error": "Missing photo_reference parameter"}), 400
 
-    photo_url = f"https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference={photo_reference}&key={MAP_API_KEY}"
+    # cached_photo = photo_cache.get(photo_reference)
+    cached_photo = get_photo_from_firebase(place_id)
+    if cached_photo:
+        print("Returning cached photo from Firebase")
+        return send_file(BytesIO(cached_photo), mimetype="image/jpeg")
+
+    # If not in cache, make a new request
+    print("photo from api")
+    photo_url = f"https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference={photo_reference}&key={config.MAP_API_KEY}"
     response = requests.get(photo_url)
 
     if response.status_code == 200:
+        # Store result in firebase photo_cache
+        save_photo_to_firebase(place_id, response.content)
         return send_file(BytesIO(response.content), mimetype="image/jpeg")
     else:
         return jsonify({"error": "Failed to fetch photo"}), response.status_code
@@ -265,7 +78,7 @@ def ads():
 
 if __name__ == "__main__":
     app.run(debug=True)
-    # temp = NearbySearch(MAP_API_KEY)
+    # temp = NearbySearch(config.MAP_API_KEY)
     # raw_list = temp.get_all_results(22.2780997, 114.1823117)
     # print(raw_list)
 
@@ -280,7 +93,7 @@ if __name__ == "__main__":
 
 #     headers = {
 #         "Content-Type": "application/json",
-#         "X-Goog-Api-Key": MAP_API_KEY,
+#         "X-Goog-Api-Key": config.MAP_API_KEY,
 #         "X-Goog-FieldMask": "places.displayName,places.formattedAddress,places.photos,places.priceLevel,places.rating",
 #     }
 
@@ -359,7 +172,7 @@ if __name__ == "__main__":
 # url = f"https://places.googleapis.com/v1/{name}/media"
 
 
-# params = {"key": MAP_API_KEY, "maxWidthPx": 4800, "skipHttpRedirect": True}
+# params = {"key": config.MAP_API_KEY, "maxWidthPx": 4800, "skipHttpRedirect": True}
 # res = requests.get(
 #     url,
 #     params=params,

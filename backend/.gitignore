@@ -4,3 +4,4 @@ venv
 
 KEY.py
 places.json
+.env
