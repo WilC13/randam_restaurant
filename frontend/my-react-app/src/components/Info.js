@@ -1,10 +1,11 @@
-import React from "react";
+import RandomBtn from "./RandomBtn";
+import MapBtn from "./MapBtn";
 
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
 const price = { 0: "超平", 1: "平", 2: "中等", 3: "貴", 4: "超貴" };
 
-function Info({ info }) {
+function Info({ info, setCurrentLocation, setIsLoading, currentLocation }) {
   if (!info || Object.keys(info).length === 0) {
     return <></>;
   }
@@ -21,6 +22,11 @@ function Info({ info }) {
       />
       <p>Rating: {info.rating}</p>
       <p>Price Level: {price[info.price_level]}</p>
+      <RandomBtn
+        setCurrentLocation={setCurrentLocation}
+        setIsLoading={setIsLoading}
+      />
+      {currentLocation && <MapBtn location={currentLocation} data={info} />}
     </div>
   );
 }
