@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 
-import a from "../assets/img/a.png";
-import b from "../assets/img/b.png";
+import a from "../assets/img/a2.png";
+import b from "../assets/img/b2.png";
 
 function Loading() {
   const [currentImage, setCurrentImage] = useState(a);

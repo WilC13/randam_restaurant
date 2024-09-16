@@ -1,3 +1,6 @@
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+
 import RandomBtn from "./RandomBtn";
 import MapBtn from "./MapBtn";
 
@@ -6,8 +9,16 @@ const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 const price = { 0: "超平", 1: "平", 2: "中等", 3: "貴", 4: "超貴" };
 
 function Info({ info, setCurrentLocation, setIsLoading, currentLocation }) {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!info || Object.keys(info).length === 0) {
+      navigate("/");
+    }
+  }, [info, navigate]);
+
   if (!info || Object.keys(info).length === 0) {
-    return <></>;
+    return null;
   }
 
   return (

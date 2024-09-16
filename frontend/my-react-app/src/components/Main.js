@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Routes, Route, useNavigate } from "react-router-dom";
+import { Routes, Route, useNavigate, Navigate } from "react-router-dom";
 import RandomBtn from "./RandomBtn";
 import Loading from "./Loading";
 import Info from "./Info";
@@ -60,6 +60,7 @@ function Main() {
             />
           }
         />
+        <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </div>
   );
