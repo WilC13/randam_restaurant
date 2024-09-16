@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import a from "../assets/img/a2.png";
 import b from "../assets/img/b2.png";
 
-function Loading() {
+function Loading({ className }) {
   const [currentImage, setCurrentImage] = useState(a);
 
   useEffect(() => {
@@ -19,12 +19,8 @@ function Loading() {
   }, []);
 
   return (
-    <div className="loading">
-      <img
-        src={currentImage}
-        alt="Loading"
-        style={{ width: "auto", height: "100vh" }}
-      />
+    <div className={className}>
+      <img src={currentImage} alt="Loading" />
     </div>
   );
 }

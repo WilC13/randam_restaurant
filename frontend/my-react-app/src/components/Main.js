@@ -39,7 +39,7 @@ function Main() {
   return (
     <div className="App">
       <Routes>
-        <Route path="/loading" element={<Loading />} />
+        <Route path="/loading" element={<Loading className="loading" />} />
         <Route
           path="/info"
           element={

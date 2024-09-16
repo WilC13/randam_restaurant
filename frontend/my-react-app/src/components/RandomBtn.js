@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+import title from "../assets/img/title.png";
 import photo from "../assets/img/a2.png";
+import click from "../assets/img/click.png";
 
 function RandomBtn({ setCurrentLocation, setIsLoading }) {
   const [isClicked, setIsClicked] = useState(false);
@@ -45,13 +47,10 @@ function RandomBtn({ setCurrentLocation, setIsLoading }) {
   };
 
   return (
-    <div>
-      <img
-        src={photo}
-        alt="Random"
-        style={{ width: "auto", height: "100vh" }}
-        onClick={getGeolocation}
-      />
+    <div className="random-btn">
+      <img src={title} alt="Title" className="title" />
+      <img src={photo} alt="Random" onClick={getGeolocation} />
+      <img src={click} alt="Click" className="click-image" />
     </div>
   );
 }
