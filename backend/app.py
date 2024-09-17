@@ -2,7 +2,7 @@ import time, math, os, re, requests, json, random
 from io import BytesIO
 
 from dotenv import load_dotenv
-from flask import Flask, request, jsonify, send_file
+from flask import Flask, request, jsonify, send_file, render_template_string
 from flask_cors import CORS
 
 from config import config
@@ -76,6 +76,34 @@ def get_photo():
 def ads():
     return send_file("ads.txt")
 
+@app.route("/api/showphoto/", methods=['GET'])
+def showphoto():
+    import base64
+    place_id = request.args.get("place_id")
+
+    print("show photo", place_id)
+
+    photo_data = get_photo_from_firebase(place_id)
+    if photo_data:
+        photo_bytes = photo_data
+        return send_file(
+            BytesIO(photo_bytes),
+            mimetype='image/jpeg',
+            as_attachment=False,
+        )
+    else:
+        return "Photo not found", 404
+
+@app.route('/')
+def index():
+    return render_template_string('''
+        <h1>Photo Viewer</h1>
+        <form action="/api/showphoto" method="get">
+            <label for="place_id">Place ID:</label>
+            <input type="text" id="place_id" name="place_id">
+            <input type="submit" value="View Photo">
+        </form>
+    ''')
 
 if __name__ == "__main__":
     app.run(debug=True)

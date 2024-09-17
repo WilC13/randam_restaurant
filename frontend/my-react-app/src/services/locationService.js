@@ -1,11 +1,19 @@
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
+let isPosting = false;
+
 export const postLocation = async (
   location,
   setIsLoading,
   setRestaurantInfo
 ) => {
-  console.log(location);
+
+  if (isPosting) {
+    return;
+  }
+  isPosting = true;
+
+  // console.log(location);
   setIsLoading(true);
 
   try {
@@ -22,5 +30,6 @@ export const postLocation = async (
     console.error(err);
   } finally {
     setIsLoading(false);
+    isPosting = false;
   }
 };

@@ -16,10 +16,11 @@ function Main() {
     if (currentLocation) {
       setLoadingStartTime(Date.now());
       setIsLoading(true);
+      // console.log(currentLocation)
       postLocation(currentLocation, setIsLoading, setRestaurantInfo);
       navigate("/loading");
     }
-  }, [currentLocation, navigate]);
+  }, [currentLocation]);
 
   useEffect(() => {
     if (!isLoading && loadingStartTime) {
@@ -34,7 +35,7 @@ function Main() {
         navigate("/info");
       }
     }
-  }, [isLoading, loadingStartTime, navigate]);
+  }, [isLoading, loadingStartTime]);
 
   return (
     <div className="App">

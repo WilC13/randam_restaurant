@@ -68,24 +68,24 @@
 
 .title {
   position: absolute;
-  width: 40%; /* 調整大小 */
-  height: auto; /* 調整大小 */
-  top: 5%; /* 調整位置 */
+  width: 40%; 
+  height: auto; 
+  top: 5%; 
   z-index: 10;
 }
 
 .click-image {
-  position: absolute; /* 設置絕對定位 */
-  width: 30%; /* 調整大小 */
-  height: auto; /* 調整大小 */
-  top: 60%; /* 調整位置 */
-  left: 70%; /* 調整位置 */
-  z-index: 10; /* 確保其在 .random-btn img 之上 */
+  position: absolute; 
+  width: 30%; 
+  height: auto; 
+  top: 60%; 
+  left: 70%; 
+  z-index: 10; 
 }
 
 @media (max-width: 768px) {
   .random-btn {
-    max-width: 90%; /* 調整手機設備上的最大寬度 */
+    max-width: 80%; 
   }
 
   .random-btn img {
@@ -94,7 +94,7 @@
   }
 
   .title {
-    top: 20%; /* 調整位置 */
+    top: 20%; 
   }
 }
 

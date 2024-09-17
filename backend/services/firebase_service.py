@@ -16,17 +16,16 @@ firebase_admin.initialize_app(cred)
 db = firestore.client()
 
 
-def get_photo_from_firebase(place_id):
+def get_photo_from_firebase(place_id:str):
     doc = db.collection("photos").document(place_id).get()
     if doc.exists:
         photo_data = doc.to_dict()["photo_data"]
         return base64.b64decode(photo_data)
-    return None
 
 
-def save_photo_to_firebase(place_id, photo_data):
+def save_photo_to_firebase(place_id:str, photo_data:str) -> bool:
     if place_id is None or photo_data is None:
-        return
+        return False
 
     db.collection("photos").document(place_id).set(
         {
@@ -36,3 +35,4 @@ def save_photo_to_firebase(place_id, photo_data):
             ),  # Encode photo_data as base64 string
         }
     )
+    return True
