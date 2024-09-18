@@ -23,7 +23,7 @@ function Main() {
   }, [currentLocation]);
 
   useEffect(() => {
-    if (!isLoading && loadingStartTime) {
+    if (!isLoading && loadingStartTime  && Object.keys(restaurantInfo).length > 0) {
       const elapsedTime = Date.now() - loadingStartTime;
       const remainingTime = 3000 - elapsedTime;
       if (remainingTime > 0) {
@@ -35,7 +35,7 @@ function Main() {
         navigate("/info");
       }
     }
-  }, [isLoading, loadingStartTime]);
+  }, [isLoading, loadingStartTime,restaurantInfo]);
 
   return (
     <>
