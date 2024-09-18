@@ -1,5 +1,5 @@
 .info-container {
-  margin: 20px;
+  margin: 20px auto;
   padding: 20px;
   border: 1px solid #ddd;
   border-radius: 8px;
@@ -17,9 +17,11 @@
 
 .info img {
   max-width: 100%;
-  max-height: 100vh;
+  max-height: 30vh;
   object-fit: contain;
-  margin: 5vh 0;
+  margin: 3vh 0;
+  border-radius: 8px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.5);
 }
 
 .info p {
@@ -28,12 +30,43 @@
   color: #666;
 }
 
-.info-btn-container,
-.map-btn-container {
+.info-btn-container {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
   width: 80%;
   margin: 0 auto;
+}
+
+.image-placeholder {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  text-align: center;
+}
+
+@media screen and (max-width: 767px) {
+  .info-container {
+    width: 90%;
+    max-width: 90%;
+    max-height: 90vh;
+  }
+
+  .info-btn-container {
+    width: 100%;
+  }
+}
+
+@media (min-width: 768px) {
+  .info-container {
+    width: 70%;
+    max-width: 80%;
+    max-height: 80vh;
+  }
+
+  .info p {
+    margin-top: 20px;
+  }
 }

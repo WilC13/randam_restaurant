@@ -23,19 +23,23 @@ function Main() {
   }, [currentLocation]);
 
   useEffect(() => {
-    if (!isLoading && loadingStartTime  && Object.keys(restaurantInfo).length > 0) {
+    if (
+      !isLoading &&
+      loadingStartTime &&
+      Object.keys(restaurantInfo).length > 0
+    ) {
       const elapsedTime = Date.now() - loadingStartTime;
       const remainingTime = 3000 - elapsedTime;
-      if (remainingTime > 0) {
+      if (remainingTime <= 0) {
         const timer = setTimeout(() => {
           navigate("/info");
         }, remainingTime);
         return () => clearTimeout(timer);
       } else if (elapsedTime >= 3000) {
-  navigate("/info");
-}
+        navigate("/info");
+      }
     }
-  }, [isLoading, loadingStartTime,restaurantInfo]);
+  }, [isLoading, restaurantInfo]);
 
   return (
     <>

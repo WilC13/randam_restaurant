@@ -3,8 +3,6 @@ import { useNavigate } from "react-router-dom";
 
 import cover from "../assets/img/cover.png";
 import title from "../assets/img/title.png";
-import photo from "../assets/img/a2.png";
-import click from "../assets/img/click.png";
 
 function RandomBtn({ setCurrentLocation, setIsLoading, isMain }) {
   const [isClicked, setIsClicked] = useState(false);
@@ -25,7 +23,7 @@ function RandomBtn({ setCurrentLocation, setIsLoading, isMain }) {
               latitude: position.coords.latitude,
               longitude: position.coords.longitude,
             });
-            setIsLoading(false);
+            // setIsLoading(false);
             setIsClicked(false);
           },
           (err) => {

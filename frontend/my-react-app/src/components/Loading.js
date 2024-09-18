@@ -35,7 +35,7 @@ function Loading({ className }) {
 
   return (
     <div className={className}>
-      <h1>搵食中{dots}</h1>
+      <h1>搵食啫{dots}</h1>
       <img src={currentImage} alt="Loading" />
     </div>
   );

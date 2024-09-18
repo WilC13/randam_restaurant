@@ -7,7 +7,6 @@ export const postLocation = async (
   setIsLoading,
   setRestaurantInfo
 ) => {
-
   if (isPosting) {
     return;
   }

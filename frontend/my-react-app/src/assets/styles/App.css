@@ -1,4 +1,6 @@
 .App {
+  display: flex;
+  justify-content: center;
   text-align: center;
   min-height: 100vh;
   overflow: hidden;
@@ -53,7 +55,7 @@
 }
 
 .random-image {
-  max-width: 50%;
+  max-width: 70%;
   max-height: auto;
   object-fit: contain;
   transition: transform 0.3s ease-in-out;
@@ -80,7 +82,7 @@
   z-index: 10;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .random-btn {
     max-width: 80%;
   }
@@ -101,18 +103,7 @@
   }
 }
 
-.loading {
-  border: none;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  animation: expandWidth 2s forwards;
-}
-
-@media (max-width: 767px) {
+@media (max-width: 768px) {
   .loading {
     max-width: 70%;
   }
@@ -129,17 +120,19 @@
 
 @media (min-width: 768px) {
   .loading {
-    max-width: 80%;
+    max-width: 50%;
   }
+}
 
-  @keyframes expandWidth {
-    from {
-      max-width: 50%;
-    }
-    to {
-      max-width: 80%;
-    }
-  }
+.loading {
+  border: none;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  animation: expandWidth 2s forwards;
 }
 
 .loading h1 {
