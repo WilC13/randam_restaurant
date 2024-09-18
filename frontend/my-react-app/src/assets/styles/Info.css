@@ -1,0 +1,39 @@
+.info-container {
+  margin: 20px;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+}
+
+.info {
+  margin-bottom: 20px;
+}
+
+.info h2 {
+  font-size: 24px;
+  color: #3d3d3c;
+}
+
+.info img {
+  max-width: 100%;
+  max-height: 100vh;
+  object-fit: contain;
+  margin: 5vh 0;
+}
+
+.info p {
+  font-size: 16px;
+  line-height: 1.5;
+  color: #666;
+}
+
+.info-btn-container,
+.map-btn-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 80%;
+  margin: 0 auto;
+}

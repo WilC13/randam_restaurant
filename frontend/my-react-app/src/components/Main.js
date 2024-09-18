@@ -38,7 +38,7 @@ function Main() {
   }, [isLoading, loadingStartTime]);
 
   return (
-    <div className="App">
+    <>
       <Routes>
         <Route path="/loading" element={<Loading className="loading" />} />
         <Route
@@ -58,12 +58,13 @@ function Main() {
             <RandomBtn
               setCurrentLocation={setCurrentLocation}
               setIsLoading={setIsLoading}
+              isMain={true}
             />
           }
         />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
-    </div>
+    </>
   );
 }
 
