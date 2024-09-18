@@ -78,7 +78,7 @@ function Info({ info, setCurrentLocation, setIsLoading, currentLocation }) {
           isMain={false}
         />
 
-        <MapBtn location={currentLocation} data={info} className="map-btn" />
+        <MapBtn location={currentLocation} data={info} />
       </div>
     </div>
   );

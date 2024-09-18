@@ -1,4 +1,4 @@
-function MapBtn({ location, data, className }) {
+function MapBtn({ location, data }) {
   const dir_url = "https://www.google.com/maps/dir/?api=1";
   const openMap = () => {
     const params = new URLSearchParams({

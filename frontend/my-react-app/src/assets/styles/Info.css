@@ -33,10 +33,11 @@
 .info-btn-container {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: space-around;
   align-items: center;
   width: 80%;
   margin: 0 auto;
+  gap: 5px;
 }
 
 .image-placeholder {
@@ -56,6 +57,7 @@
 
   .info-btn-container {
     width: 100%;
+    gap: 0px;
   }
 }
 

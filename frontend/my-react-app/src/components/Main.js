@@ -1,9 +1,12 @@
 import { useState, useEffect } from "react";
 import { Routes, Route, useNavigate, Navigate } from "react-router-dom";
+
+import { postLocation } from "../services/locationService";
+
 import RandomBtn from "./RandomBtn";
 import Loading from "./Loading";
 import Info from "./Info";
-import { postLocation } from "../services/locationService";
+import RandomTextAnimation from "./RandomTextAnimation";
 
 function Main() {
   const [isLoading, setIsLoading] = useState(false);
@@ -44,7 +47,15 @@ function Main() {
   return (
     <>
       <Routes>
-        <Route path="/loading" element={<Loading className="loading" />} />
+        <Route
+          path="/loading"
+          element={
+            <>
+              <Loading className="loading" />
+              <RandomTextAnimation />
+            </>
+          }
+        />
         <Route
           path="/info"
           element={
@@ -59,11 +70,14 @@ function Main() {
         <Route
           path="/"
           element={
-            <RandomBtn
-              setCurrentLocation={setCurrentLocation}
-              setIsLoading={setIsLoading}
-              isMain={true}
-            />
+            <>
+              <RandomBtn
+                setCurrentLocation={setCurrentLocation}
+                setIsLoading={setIsLoading}
+                isMain={true}
+              />
+              <RandomTextAnimation />
+            </>
           }
         />
         <Route path="*" element={<Navigate to="/" />} />

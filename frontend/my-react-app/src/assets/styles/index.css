@@ -18,7 +18,7 @@ html {
 body {
   font-family: "Noto Sans TC", sans-serif;
   font-optical-sizing: auto;
-  font-weight: 500; /* Use a value from 100 to 900 */
+  font-weight: 400; /* Use a value from 100 to 900 */
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
