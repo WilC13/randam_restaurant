@@ -31,9 +31,9 @@ function Main() {
           navigate("/info");
         }, remainingTime);
         return () => clearTimeout(timer);
-      } else {
-        navigate("/info");
-      }
+      } else if (elapsedTime >= 3000) {
+  navigate("/info");
+}
     }
   }, [isLoading, loadingStartTime,restaurantInfo]);
 
