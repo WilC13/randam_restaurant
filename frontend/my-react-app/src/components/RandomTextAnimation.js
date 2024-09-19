@@ -50,10 +50,10 @@ function isOverlapping(newElement, existingElements, buffer = 10) {
   return existingElements.some((el) => {
     const rect = el.getBoundingClientRect();
     return !(
-      newRect.right + buffer < rect.left ||
-      newRect.left > rect.right + buffer ||
-      newRect.bottom + buffer < rect.top ||
-      newRect.top > rect.bottom + buffer
+      newRect.right  < rect.left ||
+      newRect.left > rect.right  ||
+      newRect.bottom  < rect.top ||
+      newRect.top > rect.bottom 
     );
   });
 }

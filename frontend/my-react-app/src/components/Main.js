@@ -83,7 +83,7 @@ function Main() {
                 setIsLoading={setIsLoading}
                 isMain={true}
               />
-              {renderRandomTextAnimations(6)}
+              {renderRandomTextAnimations(10)}
             </>
           }
         />

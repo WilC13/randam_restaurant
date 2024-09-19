@@ -44,6 +44,11 @@ function Info({ info, setCurrentLocation, setIsLoading, currentLocation }) {
     setImageError(true);
   };
 
+  const GoogleSearch = ({name, vicinity}) =>{
+    const url = `https://www.google.com/search?q=${name}+${vicinity}`;
+    window.open(url, "_blank");
+  }
+
   return (
     <div className="info-container">
       <div className="info">
@@ -63,6 +68,7 @@ function Info({ info, setCurrentLocation, setIsLoading, currentLocation }) {
           alt={info.name}
           onLoad={handleImageLoad}
           onError={handleImageError}
+          onClick={() => GoogleSearch(info)}
         />
         <p>地址: {info.vicinity}</p>
         <p>評分: {info.rating}</p>
