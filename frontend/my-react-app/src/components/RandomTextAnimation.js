@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "../assets/styles/RandomTextAnimation.css";
-import {textList} from "../services/randomWord";
-
+import { textList } from "../services/randomWord";
 
 const colors = ["#181C14", "#3C3D37", "31304D", "2B2A4C"];
 
@@ -14,11 +13,10 @@ function getRandomColor() {
 }
 
 function getRandomLetterSpacing() {
-  // return `${getRandomInt(0, 10)}px`;
   return `${Math.random() * 0.5}em`;
 }
 
-function getRandomOpacity(min=0.1, max=0.8) {
+function getRandomOpacity(min = 0.1, max = 0.8) {
   return (Math.random() * (max - min) + min).toFixed(2);
 }
 
@@ -45,15 +43,15 @@ function createKeyframes(opacity, animationName) {
   document.head.appendChild(styleSheet);
 }
 
-function isOverlapping(newElement, existingElements, buffer = 10) {
+function isOverlapping(newElement, existingElements) {
   const newRect = newElement.getBoundingClientRect();
   return existingElements.some((el) => {
     const rect = el.getBoundingClientRect();
     return !(
-      newRect.right  < rect.left ||
-      newRect.left > rect.right  ||
-      newRect.bottom  < rect.top ||
-      newRect.top > rect.bottom 
+      newRect.right < rect.left ||
+      newRect.left > rect.right ||
+      newRect.bottom < rect.top ||
+      newRect.top > rect.bottom
     );
   });
 }
@@ -81,8 +79,6 @@ function createRandomTextElement(text, isMobile, existingElements) {
   newElement.style.color = color;
   newElement.style.letterSpacing = letterSpacing;
   newElement.style.animation = `${animationName} 3s ease-in-out forwards`;
-
-  
 
   // Randomly decide whether to display text horizontally or vertically
   newElement.style.writingMode = isVertical ? "vertical-rl" : "horizontal-tb";
@@ -124,7 +120,7 @@ function createRandomTextElement(text, isMobile, existingElements) {
     letterSpacing,
     writingMode: isVertical ? "vertical-rl" : "horizontal-tb",
     opacity,
-    animation : `${animationName} 3s ease-in-out forwards`
+    animation: `${animationName} 3s ease-in-out forwards`,
   };
 
   return { text, style };

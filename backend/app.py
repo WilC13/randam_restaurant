@@ -1,4 +1,4 @@
-import time, math, os, re, requests, json, random
+import time, math, os, re, requests, json, random, threading
 from io import BytesIO
 
 from dotenv import load_dotenv
@@ -6,7 +6,7 @@ from flask import Flask, request, jsonify, send_file, render_template_string
 from flask_cors import CORS
 
 from config import config
-from services.nearby_search_service import NearbySearch
+from services.nearby_search_service import NearbySearch, results_cache
 from services.firebase_service import get_photo_from_firebase, save_photo_to_firebase
 
 
@@ -25,6 +25,13 @@ CORS(
     },
 )
 # CORS(app)
+
+
+def clear_cache():
+    global results_cache
+    results_cache.clear()
+    print("Cache cleared")
+    threading.Timer(3600, clear_cache).start()
 
 
 @app.route("/api/location", methods=["POST"])
@@ -76,9 +83,11 @@ def get_photo():
 def ads():
     return send_file("ads.txt")
 
-@app.route("/api/showphoto/", methods=['GET'])
+
+@app.route("/api/showphoto/", methods=["GET"])
 def showphoto():
     import base64
+
     place_id = request.args.get("place_id")
 
     print("show photo", place_id)
@@ -88,24 +97,29 @@ def showphoto():
         photo_bytes = photo_data
         return send_file(
             BytesIO(photo_bytes),
-            mimetype='image/jpeg',
+            mimetype="image/jpeg",
             as_attachment=False,
         )
     else:
         return "Photo not found", 404
 
-@app.route('/')
+
+@app.route("/")
 def index():
-    return render_template_string('''
+    return render_template_string(
+        """
         <h1>Photo Viewer</h1>
         <form action="/api/showphoto" method="get">
             <label for="place_id">Place ID:</label>
             <input type="text" id="place_id" name="place_id">
             <input type="submit" value="View Photo">
         </form>
-    ''')
+    """
+    )
+
 
 if __name__ == "__main__":
+    clear_cache()
     app.run(debug=True)
     # temp = NearbySearch(config.MAP_API_KEY)
     # raw_list = temp.get_all_results(22.2780997, 114.1823117)
