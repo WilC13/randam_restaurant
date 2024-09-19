@@ -11,13 +11,13 @@
 .random-text {
   position: absolute;
   font-size: 2rem;
-  opacity: 0;
-  animation: fadeInOut 3s ease-in-out forwards;
+  /* opacity: var(--random-opacity, 0); */
+  /* animation: fadeInOut 3s ease-in-out forwards; */
 }
 
-@keyframes fadeInOut {
+/* @keyframes fadeInOut {
   0% {
-    opacity: 0;
+    opacity: var(--random-opacity, 0);;
   }
   10% {
     opacity: 1;
@@ -26,6 +26,6 @@
     opacity: 1;
   }
   100% {
-    opacity: 0;
+    opacity: var(--random-opacity, 0);;
   }
-}
+} */

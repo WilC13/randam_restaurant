@@ -44,6 +44,12 @@ function Main() {
     }
   }, [isLoading, restaurantInfo]);
 
+  const renderRandomTextAnimations = (count) => {
+    return Array.from({ length: count }, (_, index) => (
+      <RandomTextAnimation key={index} />
+    ));
+  };
+
   return (
     <>
       <Routes>
@@ -52,7 +58,8 @@ function Main() {
           element={
             <>
               <Loading className="loading" />
-              <RandomTextAnimation />
+              {renderRandomTextAnimations(6)}
+      
             </>
           }
         />
@@ -76,7 +83,7 @@ function Main() {
                 setIsLoading={setIsLoading}
                 isMain={true}
               />
-              <RandomTextAnimation />
+              {renderRandomTextAnimations(6)}
             </>
           }
         />

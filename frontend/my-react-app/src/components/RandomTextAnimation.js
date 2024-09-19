@@ -1,25 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "../assets/styles/RandomTextAnimation.css";
+import {textList} from "../services/randomWord";
 
-const textList = [
-  "是但啦",
-  "算數啦",
-  "唔煩你喇",
-  "求其啦",
-  "餓死喇",
-  "人生苦短",
-  "無啖好食",
-  "犯法牙",
-  "填飽個肚",
-  "食花生",
-  "廢水",
-  "自肥",
-  "不想努力了",
-  "唔想諗",
-  "Whatever la",
-  "Si L Dan La",
-  "OJ",
-];
 
 const colors = ["#181C14", "#3C3D37", "31304D", "2B2A4C"];
 
@@ -32,7 +14,35 @@ function getRandomColor() {
 }
 
 function getRandomLetterSpacing() {
-  return `${getRandomInt(0, 10)}px`;
+  // return `${getRandomInt(0, 10)}px`;
+  return `${Math.random() * 0.5}em`;
+}
+
+function getRandomOpacity(min=0.1, max=0.8) {
+  return (Math.random() * (max - min) + min).toFixed(2);
+}
+
+function createKeyframes(opacity, animationName) {
+  const styleSheet = document.createElement("style");
+  styleSheet.type = "text/css";
+  const keyframes = `
+    @keyframes ${animationName} {
+      0% {
+        opacity: 0;
+      }
+      10% {
+        opacity: ${opacity};
+      }
+      90% {
+        opacity: ${opacity};
+      }
+      100% {
+        opacity: 0;
+      }
+    }
+  `;
+  styleSheet.innerHTML = keyframes;
+  document.head.appendChild(styleSheet);
 }
 
 function isOverlapping(newElement, existingElements, buffer = 10) {
@@ -56,15 +66,23 @@ function createRandomTextElement(text, isMobile, existingElements) {
   const isVertical = Math.random() < 0.5;
   const color = getRandomColor();
   const letterSpacing = getRandomLetterSpacing();
+  const opacity = getRandomOpacity();
+  const animationName = `fadeInOut-${Math.random().toString(36).substr(2, 9)}`;
+
+  createKeyframes(opacity, animationName);
 
   newElement = document.createElement("div");
+  newElement.textContent = text;
+  newElement.style.opacity = opacity;
   newElement.style.position = "absolute";
   newElement.style.fontSize = "1rem";
   newElement.style.fontFamily = "'ZCOOL QingKe HuangYou', sans-serif";
   newElement.style.fontWeight = 300;
   newElement.style.color = color;
   newElement.style.letterSpacing = letterSpacing;
-  newElement.textContent = text;
+  newElement.style.animation = `${animationName} 3s ease-in-out forwards`;
+
+  
 
   // Randomly decide whether to display text horizontally or vertically
   newElement.style.writingMode = isVertical ? "vertical-rl" : "horizontal-tb";
@@ -105,6 +123,8 @@ function createRandomTextElement(text, isMobile, existingElements) {
     color,
     letterSpacing,
     writingMode: isVertical ? "vertical-rl" : "horizontal-tb",
+    opacity,
+    animation : `${animationName} 3s ease-in-out forwards`
   };
 
   return { text, style };
@@ -125,7 +145,8 @@ const RandomTextAnimation = () => {
 
   useEffect(() => {
     const showRandomText = () => {
-      const numElements = getRandomInt(1, isMobile ? 1 : 3);
+      const numElements = getRandomInt(1, isMobile ? 2 : 5);
+      // const numElements = 10;
       const newRandomTexts = [];
       const existingElements = Array.from(
         document.querySelectorAll(".random-text, img")
@@ -141,10 +162,14 @@ const RandomTextAnimation = () => {
 
       setTimeout(() => {
         setRandomTexts([]);
-      }, 2000); // 3秒後移除元素
+      }, 3000); // 3秒後移除元素
     };
 
-    const intervalId = setInterval(showRandomText, 3000); // 每5秒顯示一次隨機文字
+    showRandomText();
+
+    const interval = Math.random() * (8000 - 1000) + 1000;
+    const intervalId = setInterval(showRandomText, interval);
+
     return () => clearInterval(intervalId);
   }, [isMobile]);
 
