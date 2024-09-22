@@ -43,15 +43,15 @@ function createKeyframes(opacity, animationName) {
   document.head.appendChild(styleSheet);
 }
 
-function isOverlapping(newElement, existingElements) {
+function isOverlapping(newElement, existingElements, buffer = 10) {
   const newRect = newElement.getBoundingClientRect();
   return existingElements.some((el) => {
     const rect = el.getBoundingClientRect();
     return !(
-      newRect.right < rect.left ||
-      newRect.left > rect.right ||
-      newRect.bottom < rect.top ||
-      newRect.top > rect.bottom
+      newRect.right + buffer < rect.left ||
+      newRect.left - buffer > rect.right ||
+      newRect.bottom + buffer < rect.top ||
+      newRect.top - buffer > rect.bottom
     );
   });
 }
@@ -91,7 +91,10 @@ function createRandomTextElement(text, isMobile, existingElements) {
 
   do {
     const isTop = Math.random() < 0.5;
-    top = `${getRandomInt(5, isTop ? (isMobile ? 20 : 30) : 95)}vh`;
+    top = `${getRandomInt(
+      isTop ? 5 : 70,
+      isTop ? (isMobile ? 20 : 30) : 95
+    )}vh`;
     left = `${getRandomInt(5, 90)}vw`;
 
     newElement.style.top = top;
@@ -141,7 +144,7 @@ const RandomTextAnimation = () => {
 
   useEffect(() => {
     const showRandomText = () => {
-      const numElements = getRandomInt(1, isMobile ? 2 : 5);
+      const numElements = getRandomInt(2, isMobile ? 3 : 5);
       // const numElements = 10;
       const newRandomTexts = [];
       const existingElements = Array.from(
@@ -163,7 +166,7 @@ const RandomTextAnimation = () => {
 
     showRandomText();
 
-    const interval = Math.random() * (8000 - 1000) + 1000;
+    const interval = Math.random() * (8000 - 1000) + 2000;
     const intervalId = setInterval(showRandomText, interval);
 
     return () => clearInterval(intervalId);

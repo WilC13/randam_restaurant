@@ -58,8 +58,7 @@ function Main() {
           element={
             <>
               <Loading className="loading" />
-              {renderRandomTextAnimations(6)}
-      
+              {renderRandomTextAnimations(3)}
             </>
           }
         />
@@ -83,7 +82,7 @@ function Main() {
                 setIsLoading={setIsLoading}
                 isMain={true}
               />
-              {renderRandomTextAnimations(10)}
+              {renderRandomTextAnimations(5)}
             </>
           }
         />
