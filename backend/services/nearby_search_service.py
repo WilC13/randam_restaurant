@@ -1,6 +1,6 @@
 import requests, json, math, time, re
 
-from config import config
+from config import Config
 
 results_cache = dict()
 
@@ -8,7 +8,7 @@ results_cache = dict()
 class NearbySearch:
     """https://developers.google.com/maps/documentation/places/web-service/search-nearby?hl=zh-tw#pagetoken"""
 
-    def __init__(self, api_key=config.MAP_API_KEY, radius=2000):
+    def __init__(self, api_key=Config.MAP_API_KEY, radius=2000):
         self.api_key = api_key
         self.next_page_token = None
         self.RADIUS = radius

@@ -4,11 +4,11 @@ from dotenv import load_dotenv
 import firebase_admin
 from firebase_admin import credentials, firestore
 
-from config import config
+from config import Config
 
 load_dotenv()
 
-firebase_credentials_dict = json.loads(config.FIREBASE_CREDENTIALS)
+firebase_credentials_dict = json.loads(Config.FIREBASE_CREDENTIALS)
 
 cred = credentials.Certificate(firebase_credentials_dict)
 firebase_admin.initialize_app(cred)
@@ -16,14 +16,14 @@ firebase_admin.initialize_app(cred)
 db = firestore.client()
 
 
-def get_photo_from_firebase(place_id:str):
+def fetch_photo(place_id: str):
     doc = db.collection("photos").document(place_id).get()
     if doc.exists:
         photo_data = doc.to_dict()["photo_data"]
         return base64.b64decode(photo_data)
 
 
-def save_photo_to_firebase(place_id:str, photo_data:str) -> bool:
+def save_photo(place_id: str, photo_data: str) -> bool:
     if place_id is None or photo_data is None:
         return False
 

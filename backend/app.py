@@ -1,3 +1,9 @@
+import sys
+import os
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
+
 import time, math, os, re, requests, json, random, threading
 from io import BytesIO
 
@@ -5,9 +11,10 @@ from dotenv import load_dotenv
 from flask import Flask, request, jsonify, send_file, render_template_string
 from flask_cors import CORS
 
-from config import config
+from config import Config
 from services.nearby_search_service import NearbySearch, results_cache
-from services.firebase_service import get_photo_from_firebase, save_photo_to_firebase
+from services.firebase_service import fetch_photo, save_photo
+from services.openrice_search import find_openrice_url
 
 
 load_dotenv()
@@ -60,19 +67,19 @@ def get_photo():
         return jsonify({"error": "Missing photo_reference parameter"}), 400
 
     # cached_photo = photo_cache.get(photo_reference)
-    cached_photo = get_photo_from_firebase(place_id)
+    cached_photo = fetch_photo(place_id)
     if cached_photo:
         print("Returning cached photo from Firebase")
         return send_file(BytesIO(cached_photo), mimetype="image/jpeg")
 
     # If not in cache, make a new request
     print("photo from api")
-    photo_url = f"https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference={photo_reference}&key={config.MAP_API_KEY}"
+    photo_url = f"https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference={photo_reference}&key={Config.MAP_API_KEY}"
     response = requests.get(photo_url)
 
     if response.status_code == 200:
         # Store result in firebase photo_cache
-        if not save_photo_to_firebase(place_id, response.content):
+        if not save_photo(place_id, response.content):
             print(f"Failed to save photo {place_id} to Firebase")
         return send_file(BytesIO(response.content), mimetype="image/jpeg")
     else:
@@ -92,7 +99,7 @@ def showphoto():
 
     print("show photo", place_id)
 
-    photo_data = get_photo_from_firebase(place_id)
+    photo_data = get_photo(place_id)
     if photo_data:
         photo_bytes = photo_data
         return send_file(
@@ -102,6 +109,20 @@ def showphoto():
         )
     else:
         return "Photo not found", 404
+
+
+@app.route("/api/search", methods=["POST"])
+def search():
+    data = request.json
+    query = data.get("query")
+    if not query:
+        return jsonify({"error": "Missing query parameter"}), 400
+
+    openrice_url = find_openrice_url(query)
+    if openrice_url:
+        return jsonify({"status": "success", "openrice_url": openrice_url})
+    else:
+        return jsonify({"status": "error", "message": "No OpenRice URL found"}), 404
 
 
 @app.route("/")
@@ -121,7 +142,7 @@ def index():
 if __name__ == "__main__":
     clear_cache()
     app.run(debug=True)
-    # temp = NearbySearch(config.MAP_API_KEY)
+    # temp = NearbySearch(Config.MAP_API_KEY)
     # raw_list = temp.get_all_results(22.2780997, 114.1823117)
     # print(raw_list)
 
@@ -136,7 +157,7 @@ if __name__ == "__main__":
 
 #     headers = {
 #         "Content-Type": "application/json",
-#         "X-Goog-Api-Key": config.MAP_API_KEY,
+#         "X-Goog-Api-Key": Config.MAP_API_KEY,
 #         "X-Goog-FieldMask": "places.displayName,places.formattedAddress,places.photos,places.priceLevel,places.rating",
 #     }
 
@@ -215,7 +236,7 @@ if __name__ == "__main__":
 # url = f"https://places.googleapis.com/v1/{name}/media"
 
 
-# params = {"key": config.MAP_API_KEY, "maxWidthPx": 4800, "skipHttpRedirect": True}
+# params = {"key": Config.MAP_API_KEY, "maxWidthPx": 4800, "skipHttpRedirect": True}
 # res = requests.get(
 #     url,
 #     params=params,

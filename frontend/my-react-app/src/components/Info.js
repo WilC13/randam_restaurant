@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import RandomBtn from "./RandomBtn";
 import MapBtn from "./MapBtn";
 
+import { searchOR } from "../services/searchService";
+
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 
@@ -15,6 +17,18 @@ function Info({ info, setCurrentLocation, setIsLoading, currentLocation }) {
   const navigate = useNavigate();
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
+  const [url, setUrl] = useState("");
+
+  useEffect(() => {
+    async function fetchUrl() {
+      if (info && info.name && info.vicinity) {
+        const openRiceUrl = await searchOR(info.name, info.vicinity);
+        setUrl(openRiceUrl);
+      }
+    }
+
+    fetchUrl();
+  }, [info]);
 
   useEffect(() => {
     if (!info || Object.keys(info).length === 0) {
@@ -44,10 +58,10 @@ function Info({ info, setCurrentLocation, setIsLoading, currentLocation }) {
     setImageError(true);
   };
 
-  const GoogleSearch = ({name, vicinity}) =>{
-    const url = `https://www.google.com/search?q=${name}+${vicinity}`;
+  const GoogleSearch = ({ name, vicinity }) => {
+    const url = searchOR(name, vicinity);
     window.open(url, "_blank");
-  }
+  };
 
   return (
     <div className="info-container">
@@ -63,13 +77,15 @@ function Info({ info, setCurrentLocation, setIsLoading, currentLocation }) {
             <p>Image failed to load</p>
           </div>
         )}
-        <img
-          src={`${API_BASE_URL}/photo?photo_reference=${info.photos[0].photo_reference}&place_id=${info.place_id}`}
-          alt={info.name}
-          onLoad={handleImageLoad}
-          onError={handleImageError}
-          onClick={() => GoogleSearch(info)}
-        />
+        <a href={url} target="_blank" rel="noopener noreferrer">
+          <img
+            src={`${API_BASE_URL}/photo?photo_reference=${info.photos[0].photo_reference}&place_id=${info.place_id}`}
+            alt={info.name}
+            onLoad={handleImageLoad}
+            onError={handleImageError}
+            // onClick={() => GoogleSearch(info)}
+          />
+        </a>
         <p>地址: {info.vicinity}</p>
         <p>評分: {info.rating}</p>
         <div style={{ color: "#666" }}>
