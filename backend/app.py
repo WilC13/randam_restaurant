@@ -27,6 +27,9 @@ CORS(
             "origins": [
                 "http://localhost:3000",
                 "https://randam-restaurant-website.onrender.com",
+                "https://kkeat.pages.dev",
+                "https://b900604b.kkeat.pages.dev",
+                "https://www.kkeat.net",
             ]
         }
     },
