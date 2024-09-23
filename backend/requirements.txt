@@ -1,3 +1,4 @@
+beautifulsoup4==4.12.3
 blinker==1.7.0
 CacheControl==0.14.0
 cachetools==5.5.0
@@ -15,10 +16,12 @@ google-auth==2.34.0
 google-auth-httplib2==0.2.0
 google-cloud-core==2.4.1
 google-cloud-firestore==2.18.0
+google-cloud-secret-manager==2.20.2
 google-cloud-storage==2.18.2
 google-crc32c==1.6.0
 google-resumable-media==2.7.2
 googleapis-common-protos==1.65.0
+grpc-google-iam-v1==0.13.1
 grpcio==1.66.1
 grpcio-status==1.66.1
 gunicorn==20.1.0
@@ -38,6 +41,7 @@ pyparsing==3.1.4
 python-dotenv==1.0.1
 requests==2.32.3
 rsa==4.9
+soupsieve==2.6
 uritemplate==4.1.1
 urllib3==2.2.3
 Werkzeug==3.0.1
