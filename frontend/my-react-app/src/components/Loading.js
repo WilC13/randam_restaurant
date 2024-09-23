@@ -24,7 +24,7 @@ function Loading({ className }) {
 
     const timeout = setTimeout(() => {
       navigate("/info");
-    }, 30000); // 10秒後導航到/info頁面
+    }, 10000); // 5秒後導航到/info頁面
 
     return () => {
       clearInterval(interval);
