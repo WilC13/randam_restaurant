@@ -36,3 +36,23 @@ def save_photo(place_id: str, photo_data: str) -> bool:
         }
     )
     return True
+
+def fetch_url(place_id: str) -> str:
+    doc = db.collection("urls").document(place_id).get()
+    if doc.exists:
+        print(f"Found URL {doc.to_dict()['url']} for place_id {place_id}")
+        return doc.to_dict()["url"]
+
+def save_url(place_id: str, url: str) -> bool:
+    if place_id is None or url is None:
+        print(f"Failed to save URL {url} for place_id {place_id}")
+        return False
+
+    db.collection("urls").document(place_id).set(
+        {
+            "place_id": place_id,
+            "url": url,
+        }
+    )
+    print(f"Saved URL {url} for place_id {place_id}")
+    return True

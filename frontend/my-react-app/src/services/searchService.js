@@ -1,13 +1,13 @@
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
-export const searchOR = async (name, vicinity) => {
+export const searchOR = async (place_id, name, vicinity) => {
   try {
-    const response = await fetch(`${API_BASE_URL}/search`, {
+    const response = await fetch(`${API_BASE_URL}/orsearch`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ query: `${name} ${vicinity}` }),
+      body: JSON.stringify({ query: `${name} ${vicinity}` , place_id}),
     });
     const data = await response.json();
 

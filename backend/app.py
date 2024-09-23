@@ -111,14 +111,17 @@ def showphoto():
         return "Photo not found", 404
 
 
-@app.route("/api/search", methods=["POST"])
+@app.route("/api/orsearch", methods=["POST"])
 def search():
     data = request.json
+    place_id = data.get("place_id")
     query = data.get("query")
+    if not place_id:
+        return jsonify({"error": "Missing place_id parameter"}), 400
     if not query:
         return jsonify({"error": "Missing query parameter"}), 400
 
-    openrice_url = find_openrice_url(query)
+    openrice_url = find_openrice_url(place_id, query)
     if openrice_url:
         return jsonify({"status": "success", "openrice_url": openrice_url})
     else:

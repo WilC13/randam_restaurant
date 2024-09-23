@@ -22,7 +22,7 @@ function Info({ info, setCurrentLocation, setIsLoading, currentLocation }) {
   useEffect(() => {
     async function fetchUrl() {
       if (info && info.name && info.vicinity) {
-        const openRiceUrl = await searchOR(info.name, info.vicinity);
+        const openRiceUrl = await searchOR(info.place_id, info.name, info.vicinity);
         setUrl(openRiceUrl);
       }
     }
@@ -58,10 +58,10 @@ function Info({ info, setCurrentLocation, setIsLoading, currentLocation }) {
     setImageError(true);
   };
 
-  const GoogleSearch = ({ name, vicinity }) => {
-    const url = searchOR(name, vicinity);
-    window.open(url, "_blank");
-  };
+  // const GoogleSearch = ({ name, vicinity }) => {
+  //   const url = searchOR(name, vicinity);
+  //   window.open(url, "_blank");
+  // };
 
   return (
     <div className="info-container">
