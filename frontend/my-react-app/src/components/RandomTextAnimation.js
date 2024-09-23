@@ -166,7 +166,7 @@ const RandomTextAnimation = () => {
 
     showRandomText();
 
-    const interval = Math.random() * (8000 - 1000) + 2000;
+    const interval = Math.random() * (8000 - 3000) + 3000;
     const intervalId = setInterval(showRandomText, interval);
 
     return () => clearInterval(intervalId);

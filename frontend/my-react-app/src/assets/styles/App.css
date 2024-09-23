@@ -52,6 +52,7 @@
   align-items: center;
   height: 100vh;
   position: relative;
+  z-index: 10;
 }
 
 .random-image {
@@ -133,6 +134,7 @@
   align-items: center;
   height: 100vh;
   animation: expandWidth 2s forwards;
+  z-index: 10;
 }
 
 .loading h1 {
