@@ -21,28 +21,24 @@ function Main() {
       setIsLoading(true);
       // console.log(currentLocation)
       postLocation(currentLocation, setIsLoading, setRestaurantInfo);
-      navigate("/loading");
+      // navigate("/loading");
     }
   }, [currentLocation]);
 
   useEffect(() => {
-    if (
-      !isLoading &&
-      loadingStartTime &&
-      Object.keys(restaurantInfo).length > 0
-    ) {
+    if (!isLoading && loadingStartTime && Object.keys(restaurantInfo).length > 0) {
       const elapsedTime = Date.now() - loadingStartTime;
       const remainingTime = 3000 - elapsedTime;
       if (remainingTime <= 0) {
+        navigate("/info");
+      } else {
         const timer = setTimeout(() => {
           navigate("/info");
         }, remainingTime);
-        return () => clearTimeout(timer);
-      } else if (elapsedTime >= 3000) {
-        navigate("/info");
+        return () => clearTimeout(timer); // Clean up the timer on component unmount
       }
     }
-  }, [isLoading, restaurantInfo]);
+  }, [isLoading, loadingStartTime, restaurantInfo, navigate]);
 
   const renderRandomTextAnimations = (count) => {
     return Array.from({ length: count }, (_, index) => (
