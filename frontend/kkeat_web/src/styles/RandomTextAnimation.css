@@ -1,0 +1,31 @@
+#text-container {
+  position: fixed; /* 使用fixed定位，使其不影响其他组件 */
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none; /* 确保不会影响用户交互 */
+  z-index: -1; /* 确保在背景中显示 */
+}
+
+.random-text {
+  position: absolute;
+  font-size: 2rem;
+  /* opacity: var(--random-opacity, 0); */
+  /* animation: fadeInOut 3s ease-in-out forwards; */
+}
+
+/* @keyframes fadeInOut {
+  0% {
+    opacity: var(--random-opacity, 0);;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    opacity: var(--random-opacity, 0);;
+  }
+} */
