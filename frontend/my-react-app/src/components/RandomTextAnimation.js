@@ -93,7 +93,7 @@ function createRandomTextElement(text, isMobile, existingElements) {
     const isTop = Math.random() < 0.5;
     top = `${getRandomInt(
       isTop ? 5 : 70,
-      isTop ? (isMobile ? 20 : 30) : 95
+      isTop ? (isMobile ? 20 : 30) : 90
     )}vh`;
     left = `${getRandomInt(5, 90)}vw`;
 
