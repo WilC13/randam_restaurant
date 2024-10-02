@@ -1,21 +1,30 @@
-import { useState } from "react";
-// import { useNavigate } from "react-router-dom";
+"use client";
+
+import { useEffect, useState, useCallback } from "react";
+import { useRouter } from "next/navigation";
+import Image from "next/image"; // Import the Image component
+import { useClientOnly } from "@/hooks/ClientOnly";
 
 import cover from "../../public/images/cover.png";
 import title from "../../public/images/title.png";
 
-function RandomBtn({ setCurrentLocation, setIsLoading, isMain }) {
+function RandomBtn({
+  setCurrentLocation,
+  currentLocation,
+  setIsLoading,
+  isMain,
+}) {
   const [isClicked, setIsClicked] = useState(false);
-  const navigate = useNavigate();
+  const router = useRouter();
+  const isClient = useClientOnly();
 
-  const getGeolocation = () => {
+  const getGeolocation = useCallback(() => {
     if (isClicked) return;
     setIsClicked(true);
     setIsLoading(true);
-    navigate("/loading");
+    // router.push("/loading");
 
     setTimeout(() => {
-      setIsLoading(true);
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
           (position) => {
@@ -23,6 +32,7 @@ function RandomBtn({ setCurrentLocation, setIsLoading, isMain }) {
               latitude: position.coords.latitude,
               longitude: position.coords.longitude,
             });
+            console.log("Current location: ", currentLocation);
             // setIsLoading(false);
             setIsClicked(false);
           },
@@ -38,25 +48,42 @@ function RandomBtn({ setCurrentLocation, setIsLoading, isMain }) {
           }
         );
       } else {
-        alert("Geolocation is not supproted by your broswer");
+        alert("Geolocation is not supported by your browser");
         setIsLoading(false);
         setIsClicked(false);
       }
     }, 500);
-  };
+  }, [isClicked, router, setCurrentLocation, setIsLoading]);
+
+  useEffect(() => {
+    if (!isClient) return;
+
+    // Add event listener for client-side execution
+    if (isMain) {
+      const button = document.querySelector(".random-btn");
+      if (button) {
+        button.addEventListener("click", getGeolocation);
+      }
+
+      return () => {
+        if (button) {
+          button.removeEventListener("click", getGeolocation);
+        }
+      };
+    }
+  }, [isMain, getGeolocation, isClient]);
 
   return isMain ? (
-    <div className="random-btn" onClick={getGeolocation}>
-      <img src={title} alt="Title" className="title" />
-      <img src={cover} alt="Random" className="random-image" />
-      {/* <img src={click} alt="Click" className="click-image" /> */}
+    <div className="random-btn">
+      <Image src={title} alt="Title" className="title" />
+      <Image src={cover} alt="Random" className="random-image" />
     </div>
   ) : (
     <button
       type="button"
       className="btn btn-outline-primary"
-      onClick={getGeolocation}
       style={{ display: "flex", alignItems: "center" }}
+      onClick={getGeolocation}
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"

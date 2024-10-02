@@ -1,20 +1,24 @@
+"use client";
+
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+
 // import { useNavigate } from "react-router-dom";
 
 import RandomBtn from "./RandomBtn";
 import MapBtn from "./MapBtn";
 
-import { searchOR } from "../services/searchService";
+import { searchOR } from "../app/api/searchService";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 
-import "../assets/styles/Info.css";
+import "../styles/info.css";
 
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
 function Info({ info, setCurrentLocation, setIsLoading, currentLocation }) {
-  const navigate = useNavigate();
+  const router = useRouter();
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
   const [url, setUrl] = useState("");
@@ -22,7 +26,11 @@ function Info({ info, setCurrentLocation, setIsLoading, currentLocation }) {
   useEffect(() => {
     async function fetchUrl() {
       if (info && info.name && info.vicinity) {
-        const openRiceUrl = await searchOR(info.place_id, info.name, info.vicinity);
+        const openRiceUrl = await searchOR(
+          info.place_id,
+          info.name,
+          info.vicinity
+        );
         setUrl(openRiceUrl);
       }
     }
@@ -32,9 +40,9 @@ function Info({ info, setCurrentLocation, setIsLoading, currentLocation }) {
 
   useEffect(() => {
     if (!info || Object.keys(info).length === 0) {
-      navigate("/");
+      router.push("/");
     }
-  }, [info, navigate]);
+  }, [info, router]);
 
   if (!info || Object.keys(info).length === 0) {
     return null;

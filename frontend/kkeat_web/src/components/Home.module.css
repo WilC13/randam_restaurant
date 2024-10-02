@@ -1,0 +1,7 @@
+.container {
+  @apply p-5 bg-background;
+}
+
+.randomBtn {
+  @apply mb-5;
+}

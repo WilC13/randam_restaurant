@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 // import { Routes, Route, useNavigate, Navigate } from "react-router-dom";
-import  {useRouter} from 'next/router'
+import { useRouter } from "next/navigation";
 
 import { postLocation } from "../app/api/locationService";
 
 import RandomBtn from "./RandomBtn";
-import Loading from "./Loading";
+import Loading from "./loading";
 import Info from "./Info";
 import RandomTextAnimation from "./RandomTextAnimation";
 import { render } from "react-dom";
@@ -28,7 +28,11 @@ function Home1() {
   }, [currentLocation]);
 
   useEffect(() => {
-    if (!isLoading && loadingStartTime && Object.keys(restaurantInfo).length > 0) {
+    if (
+      !isLoading &&
+      loadingStartTime &&
+      Object.keys(restaurantInfo).length > 0
+    ) {
       const elapsedTime = Date.now() - loadingStartTime;
       const remainingTime = 3000 - elapsedTime;
       if (remainingTime <= 0) {
@@ -48,13 +52,13 @@ function Home1() {
     ));
   };
 
-return(
-  <div>
-    {/* {renderRandomTextAnimations(5)} */}
-    {/* <RandomBtn setCurrentLocation={setCurrentLocation} setIsLoading={setIsLoading} isMain={true} /> */}
-    <p>ac</p>
-  </div>
-);
+  return (
+    <div>
+      {/* {renderRandomTextAnimations(5)} */}
+      {/* <RandomBtn setCurrentLocation={setCurrentLocation} setIsLoading={setIsLoading} isMain={true} /> */}
+      <p>ac</p>
+    </div>
+  );
 }
 
 const Home = () => {

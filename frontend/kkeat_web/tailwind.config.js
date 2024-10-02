@@ -11,6 +11,10 @@ module.exports = {
         background: "var(--background)",
         foreground: "var(--foreground)",
       },
+      fontFamily: {
+        sans: ["Noto Sans TC", "sans-serif"],
+        display: ["ZCOOL QingKe HuangYou", "cursive"],
+      },
     },
   },
   plugins: [],

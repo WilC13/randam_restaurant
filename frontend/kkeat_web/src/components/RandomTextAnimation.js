@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import "../assets/styles/RandomTextAnimation.css";
-import { textList } from "../services/randomWord";
+import "../styles/RandomTextAnimation.css";
+import { textList } from "../app/api/randomWord";
 
 const colors = ["#181C14", "#3C3D37", "31304D", "2B2A4C"];
 
@@ -93,7 +93,7 @@ function createRandomTextElement(text, isMobile, existingElements) {
     const isTop = Math.random() < 0.5;
     top = `${getRandomInt(
       isTop ? 5 : 70,
-      isTop ? (isMobile ? 20 : 30) : 95
+      isTop ? (isMobile ? 20 : 30) : 90
     )}vh`;
     left = `${getRandomInt(5, 90)}vw`;
 
@@ -131,21 +131,30 @@ function createRandomTextElement(text, isMobile, existingElements) {
 
 const RandomTextAnimation = () => {
   const [randomTexts, setRandomTexts] = useState([]);
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const [isMobile, setIsMobile] = useState(false);
+  const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  useEffect(() => {
+    if (!isClient) return;
+
     const handleResize = () => {
       setIsMobile(window.innerWidth <= 768);
     };
 
     window.addEventListener("resize", handleResize);
+    handleResize(); // Set initial state
     return () => window.removeEventListener("resize", handleResize);
-  }, []);
+  }, [isClient]);
 
   useEffect(() => {
+    if (!isClient) return;
+
     const showRandomText = () => {
       const numElements = getRandomInt(2, isMobile ? 3 : 5);
-      // const numElements = 10;
       const newRandomTexts = [];
       const existingElements = Array.from(
         document.querySelectorAll(".random-text, img")
@@ -161,7 +170,7 @@ const RandomTextAnimation = () => {
 
       setTimeout(() => {
         setRandomTexts([]);
-      }, 3000); // 3秒後移除元素
+      }, 3000); // Remove elements after 3 seconds
     };
 
     showRandomText();
@@ -170,7 +179,7 @@ const RandomTextAnimation = () => {
     const intervalId = setInterval(showRandomText, interval);
 
     return () => clearInterval(intervalId);
-  }, [isMobile]);
+  }, [isMobile, isClient]);
 
   return (
     <div id="text-container">

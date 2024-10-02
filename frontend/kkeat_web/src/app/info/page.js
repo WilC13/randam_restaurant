@@ -1,4 +1,4 @@
-import Info from "../components/Info";
+import Info from "../../components/Info";
 
 export default function InfoPage() {
   return <Info />;
